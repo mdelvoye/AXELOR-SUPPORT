@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
+  
+  <module name="base" package="com.axelor.apps.base.db"/>
+  
+  <entity name="Partner" lang="java">
+  	<many-to-one name="deliveryAddress" ref="com.axelor.apps.base.db.Address" title="Adresse Livraison"/>
+	<string name="deliveryAddressStr" title="Adresse Livraison" large="true" multiline="true"/>
+	<many-to-one name="invoiceAddress" ref="com.axelor.apps.base.db.Address" title="Adresse Facturation"/>
+	<string name="invoiceAddressStr" title="Adresse Facturation" large="true" multiline="true"/>
+	<boolean name="uniqAddress"/>
+  </entity>
+  
+</domain-models>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+  
+  
+  <form id= "ms-product-form" name="ms-product-form"  title="Produit" model="com.axelor.apps.base.db.Product" width="large"
+  		onNew="ms-action-group-base-product-onnew">
+	  <panel name="configuration" hidden = "true" showIf="!$readonly()" title="Configuration du produit" css="panel-green">
+	  	<panel colSpan="12">
+	  		<field name="sellable" colSpan="2"/>
+	  		<field name="productTypeSelect" colSpan="2" onChange="action-group-base-product-producttype-onchange"/>
+			<field name="saleSupplySelect" colSpan="2"
+                   onChange="action-product-validate-sale-supply-select"
+                   hideIf="isShippingCostsProduct"/>
+            <field name="salesUnit" canEdit="false" hideIf="!sellable" colSpan="4" form-view="unit-form" grid-view="unit-grid" if="__config__.app.getApp('sale')?.getManageSalesUnits()"/>
+						    
+	  	</panel>
+	  </panel>
+	  
+	  <panel name="main">
+		<panel colSpan="12">
+			<field name="code" x-bind="{{code|unaccent|uppercase}}" showTitle="true" colSpan="3"  placeholder="Code" />
+			<field name="name" showTitle="true" colSpan="9"  placeholder="Name"/>		
+		</panel>
+		<panel name="prices" colSpan="12" title="Tarifs">
+			<field name="salePrice"  hideIf="!sellable" colSpan="3" widget="Decimal" x-scale="2" x-precision="20"/>
+			<field name="saleEcoPrice"  hideIf="!sellable" colSpan="3" widget="Decimal" x-scale="2" x-precision="20"/>
+			<field name="purchasePrice"  colSpan="3" widget="Decimal" x-scale="2" x-precision="20"/>		
+		</panel>
+	  </panel> <!-- main -->	
+	  
+	  <panel-tabs>
+		<panel name="description" title="Descriptions">
+			<panel name="description" title="Description" colSpan="12">
+     			<field name="description" showTitle="false" colSpan="12" widget="html"/>
+   			</panel>
+   			<panel name="internalDescription" title="Internal description" colSpan="12">
+     			<field name="internalDescription" showTitle="false" colSpan="12" widget="html"/>
+   			</panel>
+		</panel><!-- description -->
+		
+		<panel name="purchase" title="Fournisseurs">
+			<field name="defaultSupplierPartner" canEdit="false"  colSpan="12" domain="self.isContact = false AND self.isSupplier = true" form-view="partner-form" grid-view="partner-grid"/>
+			<panel-related field="supplierCatalogList" form-view="supplier-catalog-form" grid-view="supplier-catalog-grid" title="Suppliers catalog"  colSpan="12"
+	      		if-module="axelor-purchase" if="__config__.app.isApp('purchase')"/>
+		</panel>
+		
+		<panel name="accounting" title="Comptabilité">
+			<panel-related field="accountManagementList" 
+					form-view="account-management-product-form" 
+					grid-view="account-management-product-grid" 
+					domain="self.typeSelect = 1" title="Accounting" showTitle="false" colSpan="12"/>
+		</panel>
+		<panel name="configuration" title="Configuration">
+			<field name="saleCurrency"      colSpan="12" form-view="currency-form" grid-view="currency-grid"/>
+			<field name="purchaseCurrency"  colSpan="12" form-view="currency-form" grid-view="currency-grid"/>
+		</panel>
+		
+                    	
+	  </panel-tabs>
+	  <panel-mail>
+	  	<mail-messages/>
+  	  </panel-mail>
+  
+  </form>
+  
+  
+ <action-group name="ms-action-group-base-product-onnew">
+	<action name="ms-action-product-record-set-default"/>
+ </action-group>
+  
+  <action-record name="ms-action-product-record-set-default" model="com.axelor.apps.base.db.Product">
+	<field name="saleCurrency" expr="#{__user__.activeCompany.currency}"/>
+	<field name="purchaseCurrency" expr="#{__user__.activeCompany.currency}"/>
+	<field name="salesUnit" expr="eval: __repo__(Unit).find(1)"/>
+  </action-record>
+  
+  
+  </object-views>
+  
+  		

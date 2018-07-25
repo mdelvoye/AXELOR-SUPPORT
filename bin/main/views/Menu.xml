@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+	<!-- Général -->
+	<menuitem name="sc-root-general" order="-1000" title="Général"
+		icon="fa-globe" icon-background="green" />
+	  
+	<menuitem name="general-partners" parent="sc-root-general" 
+		title="Clients" action="ms.general.partners" order="1"/>
+	<action-view name="ms.general.partners" title="Clients"
+		model="com.axelor.apps.base.db.Partner">
+		<view type="cards" name="partner-contact-cards" />
+		<view type="grid" name="partner-contact-grid" />
+		<view type="form" name="ms-partner-contact-form" />
+		<domain>self.isCustomer = true</domain>
+		<context name="_isCustomer" expr="eval:1"/>	
+	</action-view>
+	
+	<menuitem name="general-product" parent="sc-root-general" 
+		title="Produit"  action="ms.general.product" order="2"/>
+	<action-view name="ms.general.product" title="Produit"
+		model="com.axelor.apps.base.db.Product">
+		<view type="cards" name="partner-cards" />
+		<view type="form" name="ms-product-form" />
+	</action-view>
+
+
+	
+	<menuitem name="general-quotation" parent="sc-root-general" order="3"
+		 title="Sale quotations" action="ms.sale.quotations" />
+	
+	<action-view name="ms.sale.quotations" title="Sale quotations"
+		model="com.axelor.apps.sale.db.SaleOrder">
+		<view type="cards" name="sale-order-quotation-cards" />
+		<view type="grid" name="sale-order-quotation-grid" />
+        <view type="calendar" name="sale-order-calendar" />
+		<view type="form" name="ms-sale-order-form" />
+		<view-param name="search-filters" value="sale-order-filters"/>
+		<view-param name="forceTitle" value="true" />
+		<domain>self.template = false and self.statusSelect &lt; 3</domain>
+		<context name="_internalUser" expr="eval: __user__.id"/>
+		<context name="_myActiveTeam" expr="call:com.axelor.apps.base.service.user.UserService:getUserActiveTeam()"/>
+		<context name="_template" expr="eval:false" />
+        <context name="todayDate" expr="eval: __config__.app.getTodayDate()"/>
+	</action-view>	
+	
+	
+</object-views>
+
